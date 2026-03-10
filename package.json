@@ -1,0 +1,25 @@
+{
+  "name": "xishi-recipes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XDcat/xishi-recipes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XDcat/xishi-recipes/issues"
+  },
+  "homepage": "https://github.com/XDcat/xishi-recipes#readme",
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
