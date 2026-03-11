@@ -2,49 +2,43 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: '喜食AI',
-  description: '从视频到菜谱，AI 帮你记录每一道美味',
-  lang: 'zh-CN',
+  description: '把 B站做饭视频变成图文菜谱',
   base: '/xishi-recipes/',
 
-  head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }],
-    ['meta', { name: 'theme-color', content: '#ff6b35' }],
-  ],
-
   themeConfig: {
-    logo: '🍳',
-    siteTitle: '喜食AI',
-
+    logo: '/hero.png',
     nav: [
       { text: '首页', link: '/' },
-      { text: '菜谱', link: '/recipes/' },
+      { text: '所有菜谱', link: '/recipes/' },
+      { text: '使用方法', link: '/guide/' },
     ],
 
     sidebar: {
+      '/guide/': [
+        {
+          text: '快速上手',
+          items: [
+            { text: '使用方法', link: '/guide/' },
+          ]
+        }
+      ],
       '/recipes/': [
         {
-        text: '所有菜谱',
-        items: [
-          { text: '蛋炒饭两吃——金包银 & 狂野锅气版', link: '/recipes/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/' },
-        ]
-      },
-            // 自动生成的菜谱会插入这里
-          ],
-        },
-      ],
+          text: '所有菜谱',
+          items: [
+            { text: '金包银蛋炒饭', link: '/recipes/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/' },
+          ]
+        }
+      ]
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/XDcat/xishi-recipes' },
+      { icon: 'github', link: 'https://github.com/XDcat/xishi-recipes' }
     ],
 
     footer: {
-      message: '用 AI 把每个做饭视频变成精美菜谱',
-      copyright: '© 2025 喜食AI',
-    },
-
-    search: {
-      provider: 'local',
-    },
-  },
+      message: '由 AI 生成，仅供参考',
+      copyright: '© 2025 喜食AI'
+    }
+  }
 })
