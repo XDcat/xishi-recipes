@@ -1,0 +1,76 @@
+{
+  "url": "https://www.bilibili.com/video/BV15QPCzGEMy/",
+  "title": "金包银or锅气蛋炒饭？一个视频教你们成为蛋炒饭大王！",
+  "description": "",
+  "duration": 330.166,
+  "thumbnail": "http://i0.hdslb.com/bfs/archive/cbbc596c9f91f86ff2dd6883e7894878a54eb1aa.jpg",
+  "slug": "金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王",
+  "recipe_dir": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王",
+  "has_subtitle": false,
+  "subtitle_path": null,
+  "transcript_path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/transcript.txt",
+  "segments_path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/segments.json",
+  "frames": [
+    {
+      "index": 1,
+      "timestamp": 0.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_01.jpg"
+    },
+    {
+      "index": 2,
+      "timestamp": 32.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_02.jpg"
+    },
+    {
+      "index": 3,
+      "timestamp": 60.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_03.jpg"
+    },
+    {
+      "index": 4,
+      "timestamp": 84.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_04.jpg"
+    },
+    {
+      "index": 5,
+      "timestamp": 110.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_05.jpg"
+    },
+    {
+      "index": 6,
+      "timestamp": 132.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_06.jpg"
+    },
+    {
+      "index": 7,
+      "timestamp": 166.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_07.jpg"
+    },
+    {
+      "index": 8,
+      "timestamp": 188.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_08.jpg"
+    },
+    {
+      "index": 9,
+      "timestamp": 216.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_09.jpg"
+    },
+    {
+      "index": 10,
+      "timestamp": 238.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_10.jpg"
+    },
+    {
+      "index": 11,
+      "timestamp": 266.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_11.jpg"
+    },
+    {
+      "index": 12,
+      "timestamp": 288.0,
+      "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_12.jpg"
+    }
+  ],
+  "recipe_path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/recipe.md"
+}
