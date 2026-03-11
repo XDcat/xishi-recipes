@@ -1,124 +1,131 @@
 #!/usr/bin/env python3
 """
-Step 4: 用 Claude API 生成结构化菜谱 Markdown（OpenAI 兼容接口）
+Step 4: 用 Claude API（OpenAI 兼容接口）生成结构化菜谱 Markdown。
+输入：转录文本 + 视频描述 + 帧截图列表 → 输出：专业菜谱 recipe.md
 """
 import sys
 import json
 import os
-import re
 from pathlib import Path
 from openai import OpenAI
 
-RECIPE_PROMPT = """你是一个专业的菜谱编辑，擅长将烹饪视频内容转化为清晰、实用、图文并茂的菜谱文档。
 
-以下是一个做饭视频的信息：
+def build_prompt(meta: dict, transcript: str, frame_names: list) -> str:
+    """构建生成菜谱的 prompt。"""
 
-**标题：** {title}
-**视频描述：** {description}
-**视频转录文本：**
+    title = meta.get("title", "未知菜名")
+    description = meta.get("description", "")
+    uploader = meta.get("uploader", "")
+
+    # 构建帧说明
+    if frame_names:
+        frames_info = "\n".join([f"- `{f}`" for f in frame_names])
+        frames_instruction = f"""
+## 可用截图
+
+以下是从视频中截取的关键帧图片文件名，请在菜谱步骤中合理插入对应的图片。
+使用 Markdown 图片语法 `![描述](./frames/文件名)` 插入。
+不需要每个步骤都插图，选最有价值的（展示关键操作、成品效果等）。
+
+{frames_info}
+"""
+    else:
+        frames_instruction = "\n（无截图，跳过图片插入）\n"
+
+    prompt = f"""你是一位专业的中餐菜谱编辑。请根据以下烹饪视频的转录文本，生成一份专业、清晰、实用的菜谱。
+
+## 视频信息
+
+- 标题：{title}
+- UP主：{uploader}
+- 视频描述：{description[:500] if description else '无'}
+
+## 转录文本
+
 {transcript}
+{frames_instruction}
+## 输出要求
 
-请根据以上内容，生成一个高质量的菜谱 Markdown 文档。
+请输出标准 Markdown 格式的菜谱，严格按以下结构：
 
-**格式要求（严格遵守）：**
-
-```markdown
+```
 ---
-title: 菜谱名称
-description: 一句话描述
-difficulty: 简单/中等/困难
-time: XX分钟
-servings: X人份
+title: 菜名
 tags: [标签1, 标签2]
-source: 视频标题
-source_url: 视频URL
+difficulty: ⭐⭐☆☆☆（1-5星）
+servings: X人份
+prep_time: X分钟
+cook_time: X分钟
+source: {meta.get('url', '')}
 ---
 
-# 菜谱名称
+# 菜名
 
-> 一句吸引人的介绍语
+> 一句话简介（突出这道菜的特色和亮点）
 
-## ⚡ 快速指南
-
-| 项目 | 详情 |
-|------|------|
-| 烹饪时间 | XX分钟 |
-| 准备时间 | XX分钟 |
-| 难度 | ⭐⭐☆☆☆ |
-| 份量 | X人份 |
-
-### 食材清单
+## 🛒 食材
 
 **主料：**
-- 食材1：XX克/个/适量
+- 食材名 — 用量
 
-**调料：**
-- 调料1：XX克/ml/适量
+**辅料/调料：**
+- 调料名 — 用量
 
-## 📋 详细步骤
+## 👨‍🍳 步骤
 
-### 第一步：步骤标题
+### 1. 步骤标题
 
-步骤详细描述...
+步骤描述，要具体、可操作。
 
-![步骤1](./frames/frame_01.jpg)
+![步骤图](./frames/frame_xx.jpg)
 
-### 第二步：步骤标题
+### 2. 下一步...
 
-步骤详细描述...
+（继续...）
 
-...
+## 💡 烹饪技巧
 
-## 💡 小贴士
+- 关键技巧 1
+- 关键技巧 2
 
-- 关键技巧1
-- 注意事项2
+## 📝 小贴士
 
-## 🔗 原视频
-
-- 来源：{title}
-- 链接：{url}
+- 注意事项、常见错误、变体建议等
 ```
 
-**注意：**
-1. 菜谱名称要简洁吸引人，不要照抄视频标题
-2. 步骤要详细、准确，保留视频中的关键技巧
-3. 食材用量要尽可能精确（视频中提到的）
-4. 图片占位符 frame_01.jpg 到 frame_12.jpg，在步骤中合理分配
-5. 只输出 Markdown 内容，不要有任何额外说明
+## 重要注意事项
+
+1. 食材用量要从转录文本中推断，如果没提到具体用量，给出合理估计并标注"适量"
+2. 步骤要详细，把视频中演示的技巧和细节写清楚
+3. 如果视频中展示了多个版本/做法，请分别写出
+4. 语言风格：专业但亲切，像一位有经验的厨师在耐心教学
+5. 不要编造视频中没有提到的内容
+6. frontmatter 中 tags 使用中文标签
+
+只输出 Markdown 内容，不要有其他说明。
 """
+    return prompt
 
 
-def generate_recipe(meta_path: str) -> dict:
-    meta_path = Path(meta_path)
-    with open(meta_path, encoding="utf-8") as f:
-        meta = json.load(f)
-
-    recipe_dir = Path(meta["recipe_dir"])
-    recipe_md_path = recipe_dir / "recipe.md"
-
-    if recipe_md_path.exists():
-        print(f"✅ 菜谱已存在: {recipe_md_path}")
-        meta["recipe_path"] = str(recipe_md_path)
-        return meta
+def generate(meta_path: str) -> None:
+    meta = json.loads(Path(meta_path).read_text())
+    out_dir = Path(meta["out_dir"])
 
     # 读取转录文本
-    transcript_path = meta.get("transcript_path")
-    if not transcript_path or not Path(transcript_path).exists():
-        raise FileNotFoundError("转录文本不存在，请先运行 transcribe.py")
+    transcript_path = out_dir / "transcript.txt"
+    if not transcript_path.exists():
+        print("❌ 未找到 transcript.txt，请先运行 transcribe.py")
+        sys.exit(1)
+    transcript = transcript_path.read_text(encoding="utf-8")
 
-    transcript = Path(transcript_path).read_text(encoding="utf-8")
+    # 读取实际截帧列表
+    frames_dir = out_dir / "frames"
+    frame_names = []
+    if frames_dir.exists():
+        frame_names = sorted([f.name for f in frames_dir.glob("frame_*.jpg")])
+    print(f"📸 找到 {len(frame_names)} 张截帧")
 
-    # 截断过长的转录文本（Claude 上下文限制）
-    if len(transcript) > 8000:
-        transcript = transcript[:8000] + "\n...(截断)"
-
-    prompt = RECIPE_PROMPT.format(
-        title=meta["title"],
-        description=meta.get("description", "")[:500],
-        transcript=transcript,
-        url=meta["url"],
-    )
+    prompt = build_prompt(meta, transcript, frame_names)
 
     print("🤖 调用 Claude 生成菜谱...")
     client = OpenAI(
@@ -133,32 +140,32 @@ def generate_recipe(meta_path: str) -> dict:
     )
     MODEL = os.environ.get("RECIPE_MODEL", "app-0h5zc0-1773132513333160269")
 
-    response = client.chat.completions.create(
-        model=MODEL,
-        max_tokens=4096,
-        messages=[{"role": "user", "content": prompt}]
-    )
+    try:
+        response = client.chat.completions.create(
+            model=MODEL,
+            max_tokens=4096,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        recipe_md = response.choices[0].message.content
+    except Exception as e:
+        print(f"❌ Claude API 调用失败：{e}")
+        sys.exit(1)
 
-    recipe_md = response.choices[0].message.content
+    # 保存菜谱
+    recipe_path = out_dir / "recipe.md"
+    recipe_path.write_text(recipe_md, encoding="utf-8")
+    print(f"✅ 菜谱已保存：{recipe_path}")
 
-    # 清理可能的 markdown 代码块包装
-    recipe_md = re.sub(r'^```markdown\n', '', recipe_md)
-    recipe_md = re.sub(r'\n```$', '', recipe_md)
-
-    recipe_md_path.write_text(recipe_md, encoding="utf-8")
-    print(f"✅ 菜谱已生成: {recipe_md_path}")
-
-    meta["recipe_path"] = str(recipe_md_path)
-    with open(meta_path, "w", encoding="utf-8") as f:
-        json.dump(meta, f, ensure_ascii=False, indent=2)
-
-    return meta
+    # 更新 meta
+    meta["recipe_path"] = str(recipe_path)
+    meta.setdefault("steps_completed", [])
+    if "generate" not in meta["steps_completed"]:
+        meta["steps_completed"].append("generate")
+    Path(meta_path).write_text(json.dumps(meta, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
-    meta_path = sys.argv[1] if len(sys.argv) > 1 else None
-    if not meta_path:
-        print("用法: python generate.py <meta.json路径>")
+    if len(sys.argv) < 2:
+        print("用法：python generate.py <meta.json路径>")
         sys.exit(1)
-    result = generate_recipe(meta_path)
-    print(f"\n菜谱预览:\n{Path(result['recipe_path']).read_text()[:800]}...")
+    generate(sys.argv[1])

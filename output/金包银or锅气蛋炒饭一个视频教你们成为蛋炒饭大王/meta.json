@@ -72,5 +72,30 @@
       "path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_12.jpg"
     }
   ],
-  "recipe_path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/recipe.md"
+  "recipe_path": "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/recipe.md",
+  "video_path": "output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/video.mp4",
+  "steps_completed": [
+    "extract",
+    "transcribe",
+    "frames",
+    "generate",
+    "publish"
+  ],
+  "out_dir": "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王",
+  "frames_dir": "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames",
+  "frame_paths": [
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_01.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_02.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_03.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_04.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_05.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_06.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_07.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_08.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_09.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_10.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_11.jpg",
+    "/Users/xdcat/xishi-recipes/output/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/frames/frame_12.jpg"
+  ],
+  "published_path": "/Users/xdcat/xishi-recipes/docs/recipes/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/index.md"
 }

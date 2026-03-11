@@ -3,30 +3,27 @@ layout: home
 
 hero:
   name: "喜食AI"
-  text: "视频变菜谱，一键搞定"
-  tagline: 从 B站做饭视频自动提取，生成图文并茂的精美菜谱
-  image:
-    src: /hero.png
-    alt: 喜食AI
+  text: "把视频变成菜谱"
+  tagline: 粘一个 B站做饭视频链接，AI 帮你生成图文并茂的专业菜谱。
   actions:
     - theme: brand
-      text: 浏览菜谱
+      text: 查看所有菜谱
       link: /recipes/
     - theme: alt
-      text: 了解项目
-      link: https://github.com/XDcat/xishi-recipes
+      text: 使用方法
+      link: /guide/
 
 features:
   - icon: 🎬
-    title: 视频一键提取
-    details: 粘贴 B站链接，自动下载视频、提取字幕或语音转文字
+    title: 一键提取
+    details: 输入 B站视频链接，自动下载音频、提取字幕，无需手动操作。
   - icon: 🤖
-    title: AI 智能生成
-    details: Claude AI 深度理解视频内容，生成结构清晰、步骤详细的专业菜谱
+    title: AI 生成菜谱
+    details: Claude AI 深度理解烹饪内容，生成食材清单、步骤说明、技巧小贴士。
   - icon: 📸
     title: 图文并茂
-    details: 自动截取关键烹饪步骤帧，每个步骤都有对应图片
-  - icon: 🔍
-    title: 快速指南
-    details: 食材清单、烹饪时间、难度评级，一眼掌握全局
+    details: 自动截取关键步骤截图，每个步骤配对应的操作画面。
+  - icon: 📖
+    title: 永久收藏
+    details: 菜谱保存为 Markdown，发布到静态网站，随时查阅，再也不用找视频了。
 ---

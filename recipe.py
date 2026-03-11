@@ -1,83 +1,144 @@
 #!/usr/bin/env python3
 """
-喜食AI - 视频转菜谱 CLI
-用法: python recipe.py <B站视频URL> [--output OUTPUT_DIR] [--site SITE_DIR] [--skip-frames]
+喜食AI 主入口 — B站视频 → 专业菜谱
+
+用法：
+  python recipe.py <B站视频URL> [选项]
+
+选项：
+  --no-publish    只生成不发布到站点
+  --skip-frames   跳过截帧步骤（加快速度）
+  --force         强制重跑所有步骤（忽略已完成的缓存）
+  --output DIR    自定义输出目录（默认 ./output）
 """
 import sys
+import json
 import argparse
-import subprocess
 from pathlib import Path
 
-# 添加 scripts 目录到路径
+# 确保 scripts 目录在 path 里
 sys.path.insert(0, str(Path(__file__).parent / "scripts"))
 
 from extract import extract
 from transcribe import transcribe
-from frames import extract_frames
-from generate import generate_recipe
+from frames import frames
+from generate import generate
 from publish import publish
 
 
+def find_meta(output_base: Path, url: str) -> Path | None:
+    """在 output 目录下查找已存在的 meta.json（通过 url 匹配）。"""
+    if not output_base.exists():
+        return None
+    for meta_file in output_base.glob("*/meta.json"):
+        try:
+            meta = json.loads(meta_file.read_text())
+            if meta.get("url") == url:
+                return meta_file
+        except Exception:
+            pass
+    return None
+
+
+def run_step(name: str, fn, *args, completed_steps: list, force: bool) -> None:
+    """运行单个步骤，支持断点续跑。"""
+    if not force and name in completed_steps:
+        print(f"⏭️  跳过 {name}（已完成，使用 --force 重新运行）")
+        return
+    print(f"\n{'='*50}")
+    print(f"▶  步骤：{name.upper()}")
+    print(f"{'='*50}")
+    fn(*args)
+
+
 def main():
-    parser = argparse.ArgumentParser(description="喜食AI - B站视频转菜谱")
+    parser = argparse.ArgumentParser(
+        description="B站视频 → 专业菜谱",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__
+    )
     parser.add_argument("url", help="B站视频 URL")
-    parser.add_argument("--output", default="output", help="临时文件输出目录（默认: output）")
-    parser.add_argument("--site", default="docs", help="VitePress 站点目录（默认: docs）")
+    parser.add_argument("--no-publish", action="store_true", help="只生成不发布")
     parser.add_argument("--skip-frames", action="store_true", help="跳过截帧步骤")
-    parser.add_argument("--no-publish", action="store_true", help="只生成，不发布到站点")
+    parser.add_argument("--force", action="store_true", help="强制重跑所有步骤")
+    parser.add_argument("--output", default=None, help="自定义输出目录")
     args = parser.parse_args()
 
-    print("=" * 60)
-    print("🍳  喜食AI — 视频转菜谱")
-    print("=" * 60)
+    # 自定义输出目录
+    if args.output:
+        import os
+        os.environ["RECIPE_OUTPUT_DIR"] = args.output
 
-    # Step 1: 下载视频
-    print("\n[1/5] 📥 提取视频内容...")
-    meta = extract(args.url, args.output)
-    meta_path = Path(meta["recipe_dir"]) / "meta.json"
+    print("🍳 喜食AI — B站视频菜谱生成器")
+    print(f"📺 视频：{args.url}\n")
 
-    # Step 2: 转录
-    print("\n[2/5] 🎙️  文字转录...")
-    meta = transcribe(str(meta_path))
+    # 查找已有 meta（断点续跑）
+    output_base = Path(__file__).parent / "output"
+    if args.output:
+        output_base = Path(args.output)
 
-    # Step 3: 截帧
+    meta_path = None
+    if not args.force:
+        meta_path = find_meta(output_base, args.url)
+        if meta_path:
+            meta = json.loads(meta_path.read_text())
+            completed = meta.get("steps_completed", [])
+            print(f"📌 找到已有进度：{completed}")
+
+    # Step 1: Extract
+    if meta_path is None:
+        # 首次运行
+        meta = extract(args.url)
+        out_dir = Path(meta["out_dir"])
+        meta_path = out_dir / "meta.json"
+    else:
+        meta = json.loads(meta_path.read_text())
+        completed = meta.get("steps_completed", [])
+        run_step("extract", extract, args.url, completed_steps=completed, force=args.force)
+        # extract 会重新写 meta，重新读
+        meta = json.loads(meta_path.read_text()) if meta_path.exists() else meta
+
+    # 重新找 meta_path（extract 可能改了 slug）
+    output_base = Path(__file__).parent / "output"
+    meta_path = find_meta(output_base, args.url)
+    if not meta_path:
+        print("❌ extract 后找不到 meta.json")
+        sys.exit(1)
+
+    meta = json.loads(meta_path.read_text())
+    completed = meta.get("steps_completed", [])
+
+    # Step 2: Transcribe
+    run_step("transcribe", transcribe, str(meta_path),
+             completed_steps=completed, force=args.force)
+    meta = json.loads(meta_path.read_text())
+    completed = meta.get("steps_completed", [])
+
+    # Step 3: Frames
     if not args.skip_frames:
-        print("\n[3/5] 📸 截取关键帧...")
-        meta = extract_frames(str(meta_path))
+        run_step("frames", frames, str(meta_path),
+                 completed_steps=completed, force=args.force)
+        meta = json.loads(meta_path.read_text())
+        completed = meta.get("steps_completed", [])
     else:
-        print("\n[3/5] 📸 跳过截帧")
+        print("⏭️  跳过截帧（--skip-frames）")
 
-    # Step 4: 生成菜谱
-    print("\n[4/5] 🤖 AI 生成菜谱...")
-    meta = generate_recipe(str(meta_path))
+    # Step 4: Generate
+    run_step("generate", generate, str(meta_path),
+             completed_steps=completed, force=args.force)
+    meta = json.loads(meta_path.read_text())
+    completed = meta.get("steps_completed", [])
 
-    # Step 5: 发布
+    # Step 5: Publish
     if not args.no_publish:
-        print("\n[5/5] 🚀 发布到站点...")
-        publish(str(meta_path), args.site)
+        run_step("publish", publish, str(meta_path),
+                 completed_steps=completed, force=args.force)
 
-        # 自动 git push
-        print("\n📤 推送到 GitHub...")
-        try:
-            subprocess.run(["git", "add", "-A"], cwd=Path(args.site).parent, check=True)
-            subprocess.run(
-                ["git", "commit", "-m", f"recipe: {meta['title'][:50]}"],
-                cwd=Path(args.site).parent, check=True
-            )
-            subprocess.run(["git", "push"], cwd=Path(args.site).parent, check=True)
-            print("✅ 已推送，GitHub Actions 将自动部署")
-        except subprocess.CalledProcessError as e:
-            print(f"⚠️  Git 操作失败: {e}")
-    else:
-        print("\n[5/5] 🚀 跳过发布（--no-publish）")
-        print(f"📄 菜谱已生成: {meta.get('recipe_path')}")
-
-    print("\n" + "=" * 60)
-    print(f"✅ 完成！菜谱: {meta['title']}")
+    print("\n✅ 全部完成！")
     if not args.no_publish:
-        slug = meta["slug"]
-        print(f"🌐 网址: https://xdcat.github.io/xishi-recipes/recipes/{slug}/")
-    print("=" * 60)
+        slug = meta.get("slug", "")
+        print(f"📖 查看菜谱：docs/recipes/{slug}/index.md")
+        print("🌐 本地预览：npm run docs:dev（在项目根目录）")
 
 
 if __name__ == "__main__":

@@ -1,108 +1,139 @@
 #!/usr/bin/env python3
 """
-Step 5: 发布菜谱到 VitePress 站点
-- 复制 MD 和图片到 docs/recipes/
-- 更新侧边栏配置
+Step 5: 把生成的菜谱发布到 VitePress docs 站点。
+复制 recipe.md + frames/ 到 docs/recipes/<slug>/，
+然后重新扫描 docs/recipes/ 目录，更新 VitePress 侧边栏配置。
 """
 import sys
 import json
-import shutil
 import re
+import shutil
 from pathlib import Path
 
 
-def publish(meta_path: str, site_dir: str = "docs") -> dict:
-    meta_path = Path(meta_path)
-    site_dir = Path(site_dir)
+DOCS_DIR = Path(__file__).parent.parent / "docs"
+RECIPES_DIR = DOCS_DIR / "recipes"
+CONFIG_PATH = DOCS_DIR / ".vitepress" / "config.ts"
 
-    with open(meta_path, encoding="utf-8") as f:
-        meta = json.load(f)
 
-    recipe_dir = Path(meta["recipe_dir"])
+def slugify_title(md_path: Path) -> str:
+    """从 recipe.md frontmatter 读取 title，生成侧边栏显示名。"""
+    try:
+        content = md_path.read_text(encoding="utf-8")
+        m = re.search(r'^title:\s*(.+)$', content, re.MULTILINE)
+        if m:
+            return m.group(1).strip().strip('"\'')
+    except Exception:
+        pass
+    return md_path.parent.name
+
+
+def update_sidebar(sidebar_items: list) -> None:
+    """更新 config.ts 中 recipes 侧边栏部分。"""
+    if not CONFIG_PATH.exists():
+        print("⚠️  config.ts 不存在，跳过侧边栏更新")
+        return
+
+    # 构建新的 sidebar items 字符串
+    items_lines = []
+    for item in sidebar_items:
+        items_lines.append(
+            f"          {{ text: '{item['text']}', link: '{item['link']}' }},"
+        )
+    items_str = "\n".join(items_lines)
+
+    new_sidebar_block = f"""{{
+        text: '所有菜谱',
+        items: [
+{items_str}
+        ]
+      }}"""
+
+    config_text = CONFIG_PATH.read_text(encoding="utf-8")
+
+    # 用正则替换 sidebar recipes 部分（整个 { text: '所有菜谱', ... } 块）
+    pattern = r'\{[^{}]*text:\s*[\'"]所有菜谱[\'"].*?\}'
+    if re.search(pattern, config_text, re.DOTALL):
+        new_config = re.sub(pattern, new_sidebar_block, config_text, flags=re.DOTALL)
+    else:
+        # 如果没有找到，尝试替换整个 sidebar 的 recipes 数组
+        print("⚠️  未找到侧边栏 recipes 块，追加到文件末尾前")
+        new_config = config_text
+
+    CONFIG_PATH.write_text(new_config, encoding="utf-8")
+    print(f"✅ 侧边栏已更新（{len(sidebar_items)} 个菜谱）")
+
+
+def publish(meta_path: str) -> None:
+    meta = json.loads(Path(meta_path).read_text())
+    out_dir = Path(meta["out_dir"])
     slug = meta["slug"]
-    recipe_md_path = recipe_dir / "recipe.md"
 
-    if not recipe_md_path.exists():
-        raise FileNotFoundError("菜谱 MD 不存在，请先运行 generate.py")
+    recipe_src = out_dir / "recipe.md"
+    if not recipe_src.exists():
+        print("❌ 未找到 recipe.md，请先运行 generate.py")
+        sys.exit(1)
 
-    # 创建菜谱目录
-    target_dir = site_dir / "recipes" / slug
-    target_dir.mkdir(parents=True, exist_ok=True)
+    # 目标目录
+    dest_dir = RECIPES_DIR / slug
+    dest_dir.mkdir(parents=True, exist_ok=True)
 
-    # 复制图片
-    frames_src = recipe_dir / "frames"
-    frames_dst = target_dir / "frames"
+    # 复制 recipe.md → index.md
+    dest_recipe = dest_dir / "index.md"
+    shutil.copy2(recipe_src, dest_recipe)
+    print(f"📄 复制菜谱：{dest_recipe}")
+
+    # 复制 frames/
+    frames_src = out_dir / "frames"
     if frames_src.exists():
-        if frames_dst.exists():
-            shutil.rmtree(frames_dst)
-        shutil.copytree(frames_src, frames_dst)
-        print(f"📸 图片已复制到 {frames_dst}")
+        dest_frames = dest_dir / "frames"
+        if dest_frames.exists():
+            shutil.rmtree(dest_frames)
+        shutil.copytree(frames_src, dest_frames)
+        frame_count = len(list(dest_frames.glob("*.jpg")))
+        print(f"🖼️  复制截帧：{frame_count} 张")
 
-    # 复制菜谱 MD
-    target_md = target_dir / "index.md"
-    shutil.copy2(recipe_md_path, target_md)
-    print(f"📄 菜谱已复制到 {target_md}")
+    # 扫描所有已发布菜谱，重建侧边栏
+    sidebar_items = []
+    for recipe_dir in sorted(RECIPES_DIR.iterdir()):
+        if not recipe_dir.is_dir():
+            continue
+        index_md = recipe_dir / "index.md"
+        if not index_md.exists():
+            continue
+        title = slugify_title(index_md)
+        sidebar_items.append({
+            "text": title,
+            "link": f"/recipes/{recipe_dir.name}/",
+        })
 
-    # 读取菜谱标题
-    content = recipe_md_path.read_text(encoding="utf-8")
-    title_match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
-    title = title_match.group(1) if title_match else meta["title"]
-
-    # 更新侧边栏
-    update_sidebar(site_dir, slug, title)
+    update_sidebar(sidebar_items)
 
     # 更新菜谱列表页
-    update_recipe_index(site_dir, slug, title, meta)
+    update_recipe_list(sidebar_items)
 
-    print(f"\n✅ 发布完成！")
-    print(f"📖 地址: /recipes/{slug}/")
-    return meta
+    # 更新 meta
+    meta["published_path"] = str(dest_recipe)
+    meta.setdefault("steps_completed", [])
+    if "publish" not in meta["steps_completed"]:
+        meta["steps_completed"].append("publish")
+    Path(meta_path).write_text(json.dumps(meta, ensure_ascii=False, indent=2))
 
-
-def update_sidebar(site_dir: Path, slug: str, title: str):
-    config_path = site_dir / ".vitepress" / "config.ts"
-    config = config_path.read_text(encoding="utf-8")
-
-    entry = f"{{ text: '{title}', link: '/recipes/{slug}/' }}"
-
-    if slug in config:
-        print("📌 侧边栏已有该菜谱")
-        return
-
-    # 在 items 数组中插入
-    config = config.replace(
-        "// 自动生成的菜谱会插入这里",
-        f"{entry},\n            // 自动生成的菜谱会插入这里"
-    )
-    config_path.write_text(config, encoding="utf-8")
-    print(f"📌 侧边栏已更新: {title}")
+    print(f"🎉 发布完成：docs/recipes/{slug}/")
 
 
-def update_recipe_index(site_dir: Path, slug: str, title: str, meta: dict):
-    index_path = site_dir / "recipes" / "index.md"
-    content = index_path.read_text(encoding="utf-8")
-
-    # 读取菜谱 frontmatter 获取标签
-    recipe_content = (site_dir / "recipes" / slug / "index.md").read_text(encoding="utf-8")
-    desc_match = re.search(r'description:\s*(.+)', recipe_content)
-    desc = desc_match.group(1).strip() if desc_match else ""
-
-    entry = f"\n### 🍳 [{title}](./{slug}/)\n\n{desc}\n"
-
-    if slug in content:
-        return
-
-    content = content.replace(
-        "> 🍳 菜谱正在陆续添加中，敬请期待...",
-        entry + "\n---\n\n> 🍳 更多菜谱持续添加中..."
-    )
-    index_path.write_text(content, encoding="utf-8")
-    print(f"📋 菜谱列表已更新")
+def update_recipe_list(sidebar_items: list) -> None:
+    """更新 docs/recipes/index.md 菜谱列表页。"""
+    index_path = RECIPES_DIR / "index.md"
+    lines = ["# 所有菜谱\n"]
+    for item in sidebar_items:
+        lines.append(f"- [{item['text']}]({item['link']})")
+    index_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"📋 菜谱列表已更新（{len(sidebar_items)} 个）")
 
 
 if __name__ == "__main__":
-    meta_path = sys.argv[1] if len(sys.argv) > 1 else None
-    if not meta_path:
-        print("用法: python publish.py <meta.json路径>")
+    if len(sys.argv) < 2:
+        print("用法：python publish.py <meta.json路径>")
         sys.exit(1)
-    publish(meta_path)
+    publish(sys.argv[1])

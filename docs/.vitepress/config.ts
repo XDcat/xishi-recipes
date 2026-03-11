@@ -23,9 +23,11 @@ export default defineConfig({
     sidebar: {
       '/recipes/': [
         {
-          text: '所有菜谱',
-          items: [
-            { text: '黄金蛋炒饭两吃——金包银 & 狂野回忆版', link: '/recipes/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/' },
+        text: '所有菜谱',
+        items: [
+          { text: '蛋炒饭两吃——金包银 & 狂野锅气版', link: '/recipes/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/' },
+        ]
+      },
             // 自动生成的菜谱会插入这里
           ],
         },
