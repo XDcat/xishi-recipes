@@ -46,9 +46,8 @@ def build_prompt(meta: dict, transcript: str, frame_names: list) -> str:
 {frames_instruction}
 ## 输出要求
 
-请输出标准 Markdown 格式的菜谱，严格按以下结构：
+请输出标准 Markdown 格式的菜谱，严格按以下结构（直接输出纯 Markdown，绝对不要用代码块包裹）：
 
-```
 ---
 title: 菜名
 tags: [标签1, 标签2]
@@ -91,7 +90,6 @@ source: {meta.get('url', '')}
 ## 📝 小贴士
 
 - 注意事项、常见错误、变体建议等
-```
 
 ## 重要注意事项
 
@@ -150,6 +148,20 @@ def generate(meta_path: str) -> None:
     except Exception as e:
         print(f"❌ Claude API 调用失败：{e}")
         sys.exit(1)
+
+    # 后处理：剥掉 Claude 可能用代码块包裹输出的情况
+    recipe_md = recipe_md.strip()
+    if recipe_md.startswith("```"):
+        # 去掉第一行（```markdown 或 ``` 等）
+        lines = recipe_md.splitlines()
+        # 找到结尾的 ```
+        end_idx = len(lines)
+        for i in range(len(lines) - 1, 0, -1):
+            if lines[i].strip() == "```":
+                end_idx = i
+                break
+        recipe_md = "\n".join(lines[1:end_idx]).strip()
+        print("⚠️  检测到代码块包裹，已自动剥离")
 
     # 保存菜谱
     recipe_path = out_dir / "recipe.md"
