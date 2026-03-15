@@ -1,0 +1,39 @@
+{
+  "url": "https://www.bilibili.com/video/BV1zZtZe4ERt/",
+  "video_id": "BV1zZtZe4ERt",
+  "title": "隋卞一做 |糖醋排骨！特厨做法！",
+  "slug": "隋卞一做_糖醋排骨_特厨做法",
+  "out_dir": "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法",
+  "audio_path": "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/audio.mp3",
+  "video_path": "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/video.mp4",
+  "subtitle_path": null,
+  "description": "糖醋排骨！特厨做法！",
+  "duration": 236.378,
+  "uploader": "特厨做饭_",
+  "steps_completed": [
+    "extract",
+    "transcribe",
+    "frames",
+    "generate",
+    "publish"
+  ],
+  "transcript_path": "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/transcript.txt",
+  "segments_path": "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/segments.json",
+  "frames_dir": "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames",
+  "frame_paths": [
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_01.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_02.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_03.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_04.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_05.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_06.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_07.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_08.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_09.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_10.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_11.jpg",
+    "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/frames/frame_12.jpg"
+  ],
+  "recipe_path": "/Users/xdcat/xishi-recipes/output/隋卞一做_糖醋排骨_特厨做法/recipe.md",
+  "published_path": "/Users/xdcat/xishi-recipes/docs/recipes/隋卞一做_糖醋排骨_特厨做法/index.md"
+}

@@ -1,0 +1,38 @@
+{
+  "url": "https://www.bilibili.com/video/BV1zJ411v7iu/",
+  "video_id": "BV1zJ411v7iu",
+  "title": "厨师长教你：“黄焖土鸡”的家常做法，味道很赞先收藏了",
+  "slug": "厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了",
+  "out_dir": "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了",
+  "audio_path": "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/audio.mp3",
+  "video_path": "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/video.mp4",
+  "subtitle_path": null,
+  "description": "厨师长教你：“黄焖土鸡”的家常做法，味道很赞先收藏了",
+  "duration": 303.335,
+  "uploader": "美食作家王刚R",
+  "steps_completed": [
+    "extract",
+    "transcribe",
+    "frames",
+    "generate",
+    "publish"
+  ],
+  "transcript_path": "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/transcript.txt",
+  "segments_path": "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/segments.json",
+  "frames_dir": "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames",
+  "frame_paths": [
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_01.jpg",
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_02.jpg",
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_03.jpg",
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_04.jpg",
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_05.jpg",
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_06.jpg",
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_07.jpg",
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_08.jpg",
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_09.jpg",
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_10.jpg",
+    "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/frames/frame_11.jpg"
+  ],
+  "recipe_path": "/Users/xdcat/xishi-recipes/output/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/recipe.md",
+  "published_path": "/Users/xdcat/xishi-recipes/docs/recipes/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/index.md"
+}

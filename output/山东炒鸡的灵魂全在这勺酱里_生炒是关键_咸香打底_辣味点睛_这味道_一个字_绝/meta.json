@@ -1,0 +1,39 @@
+{
+  "url": "https://www.bilibili.com/video/BV1cM6cBMEU7/",
+  "video_id": "BV1cM6cBMEU7",
+  "title": "山东炒鸡的灵魂全在这勺酱里！生炒是关键，咸香打底，辣味点睛，这味道，一个字，绝！",
+  "slug": "山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝",
+  "out_dir": "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝",
+  "audio_path": "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/audio.mp3",
+  "video_path": "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/video.mp4",
+  "subtitle_path": null,
+  "description": "",
+  "duration": 608.042,
+  "uploader": "老饭骨",
+  "steps_completed": [
+    "extract",
+    "transcribe",
+    "frames",
+    "generate",
+    "publish"
+  ],
+  "transcript_path": "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/transcript.txt",
+  "segments_path": "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/segments.json",
+  "frames_dir": "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames",
+  "frame_paths": [
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_01.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_02.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_03.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_04.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_05.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_06.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_07.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_08.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_09.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_10.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_11.jpg",
+    "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/frames/frame_12.jpg"
+  ],
+  "recipe_path": "/Users/xdcat/xishi-recipes/output/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/recipe.md",
+  "published_path": "/Users/xdcat/xishi-recipes/docs/recipes/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/index.md"
+}

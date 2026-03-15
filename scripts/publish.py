@@ -28,39 +28,59 @@ def slugify_title(md_path: Path) -> str:
     return md_path.parent.name
 
 
+def _build_items_str(sidebar_items: list, indent: str) -> str:
+    lines = []
+    for item in sidebar_items:
+        lines.append(f"{indent}{{ text: '{item['text']}', link: '{item['link']}' }},")
+    return "\n".join(lines)
+
+
 def update_sidebar(sidebar_items: list) -> None:
-    """更新 config.ts 中 recipes 侧边栏部分。"""
+    """重写 config.ts，将 nav 和 sidebar 中的菜谱列表替换为最新内容。"""
     if not CONFIG_PATH.exists():
         print("⚠️  config.ts 不存在，跳过侧边栏更新")
         return
 
-    # 构建新的 sidebar items 字符串
-    items_lines = []
-    for item in sidebar_items:
-        items_lines.append(
-            f"          {{ text: '{item['text']}', link: '{item['link']}' }},"
-        )
-    items_str = "\n".join(items_lines)
+    nav_items = _build_items_str(sidebar_items, indent="          ")
+    sidebar_items_str = _build_items_str(sidebar_items, indent="            ")
 
-    new_sidebar_block = f"""{{
-        text: '所有菜谱',
-        items: [
-{items_str}
-        ]
-      }}"""
+    new_nav_block = (
+        "      {\n"
+        "        text: '所有菜谱',\n"
+        "        items: [\n"
+        f"{nav_items}\n"
+        "        ]\n"
+        "      }"
+    )
+
+    new_sidebar_block = (
+        "        {\n"
+        "          text: '所有菜谱',\n"
+        "          items: [\n"
+        f"{sidebar_items_str}\n"
+        "          ]\n"
+        "        }"
+    )
 
     config_text = CONFIG_PATH.read_text(encoding="utf-8")
 
-    # 用正则替换 sidebar recipes 部分（整个 { text: '所有菜谱', ... } 块）
-    pattern = r'\{[^{}]*text:\s*[\'"]所有菜谱[\'"].*?\}'
-    if re.search(pattern, config_text, re.DOTALL):
-        new_config = re.sub(pattern, new_sidebar_block, config_text, flags=re.DOTALL)
-    else:
-        # 如果没有找到，尝试替换整个 sidebar 的 recipes 数组
-        print("⚠️  未找到侧边栏 recipes 块，追加到文件末尾前")
-        new_config = config_text
+    # 替换 nav 中的 所有菜谱 dropdown（以 { 开头，匹配到对应的闭合 }）
+    nav_pattern = (
+        r"\{[ \t]*\n[ \t]*text:\s*['\"]所有菜谱['\"],\s*\n"
+        r"[ \t]*items:\s*\[.*?\][ \t]*\n[ \t]*\}"
+    )
+    config_text = re.sub(nav_pattern, new_nav_block, config_text, flags=re.DOTALL)
 
-    CONFIG_PATH.write_text(new_config, encoding="utf-8")
+    # 替换 sidebar '/recipes/' 中的 所有菜谱 block（缩进更深）
+    sidebar_pattern = (
+        r"\{[ \t]*\n[ \t]*text:\s*['\"]所有菜谱['\"],\s*\n"
+        r"[ \t]*items:\s*\[.*?\][ \t]*\n[ \t]*\}"
+    )
+    # 只替换一次（已经替换了 nav，这里再替换一次会把 sidebar 也处理掉）
+    # 由于 nav 已替换，此处用新的 config_text 做第二次替换
+    config_text = re.sub(sidebar_pattern, new_sidebar_block, config_text, count=1, flags=re.DOTALL)
+
+    CONFIG_PATH.write_text(config_text, encoding="utf-8")
     print(f"✅ 侧边栏已更新（{len(sidebar_items)} 个菜谱）")
 
 

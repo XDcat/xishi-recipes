@@ -9,7 +9,15 @@ export default defineConfig({
     logo: '/hero.png',
     nav: [
       { text: '首页', link: '/' },
-      { text: '所有菜谱', link: '/recipes/' },
+      {
+        text: '所有菜谱',
+        items: [
+          { text: '糖醋排骨', link: '/recipes/隋卞一做_糖醋排骨_特厨做法/' },
+          { text: '黄焖土鸡', link: '/recipes/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/' },
+          { text: '蛋炒饭两吃——金包银 & 狂野锅气版', link: '/recipes/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/' },
+          { text: '山东炒鸡', link: '/recipes/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/' },
+        ]
+      },
       { text: '使用方法', link: '/guide/' },
     ],
 
@@ -26,7 +34,10 @@ export default defineConfig({
         {
           text: '所有菜谱',
           items: [
-            { text: '金包银蛋炒饭', link: '/recipes/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/' },
+            { text: '糖醋排骨', link: '/recipes/隋卞一做_糖醋排骨_特厨做法/' },
+            { text: '黄焖土鸡', link: '/recipes/厨师长教你_黄焖土鸡_的家常做法_味道很赞先收藏了/' },
+            { text: '蛋炒饭两吃——金包银 & 狂野锅气版', link: '/recipes/金包银or锅气蛋炒饭一个视频教你们成为蛋炒饭大王/' },
+            { text: '山东炒鸡', link: '/recipes/山东炒鸡的灵魂全在这勺酱里_生炒是关键_咸香打底_辣味点睛_这味道_一个字_绝/' },
           ]
         }
       ]
